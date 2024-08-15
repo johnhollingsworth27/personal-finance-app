@@ -27,6 +27,13 @@ form {
     margin-bottom: 20px;
     align-items: center;
 }
+.form-group0 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+}
 
 .form-group label, .form-group3 label {
     text-align: left;
