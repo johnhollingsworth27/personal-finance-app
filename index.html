@@ -1,88 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Personal Finance Calculator</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Congratulations on beginning your personal finance journey</h1>
-    <p>Please input your current values below and select your preferences to display your future value for your accounts.</p>
-    
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+  </head>
+  <body>
+    <h1>
+      financialfuture | futurefunds | smartsavings | investahead |
+      savingsspectrum | fortuneforecast
+    </h1>
+    <h2>
+      Input your current values in the fields below to calculate your future
+      holdings
+    </h2>
+
     <form id="financeForm">
-        <!-- Line 1: Brokerage, Roth IRA, and 401k -->
-        <div class="form-group">
-            <div>
-                <label for="brokerage">Brokerage Account:</label>
-                <input type="number" id="brokerage" name="brokerage" required>
-            </div>
-            <div>
-                <label for="rothIra">Roth IRA:</label>
-                <input type="number" id="rothIra" name="rothIra" required>
-            </div>
-            <div>
-                <label for="401k">401k:</label>
-                <input type="number" id="account401k" name="account401k" required>
-            </div>
+      <!-- Line 1: Brokerage, Roth IRA, and 401k -->
+      <div class="form-group">
+        <div>
+          <label for="brokerage">Brokerage Account Balance:</label>
+          <input type="number" id="brokerage" name="brokerage" />
         </div>
-         <!-- Line 2: Yearly Contributions -->
-        <div class="form-group">
-            <div>
-                <label for="brokerageContribution">Yearly Brokerage Contribution:</label>
-                <input type="number" id="brokerageContribution" name="brokerageContribution" required>
-            </div>
-            <div>
-                <label for="rothIraContribution">Yearly Roth IRA Contribution:</label>
-                <input type="number" id="rothIraContribution" name="rothIraContribution" required>
-            </div>
-            <div>
-                <label for="account401kContribution">Yearly 401k Contribution:</label>
-                <input type="number" id="account401kContribution" name="account401kContribution" required>
-            </div>
-    </div>
-        
-        <!-- Line 2: Select Growth Rates -->
-        <div class="form-group2">
-            <label for="growthRates">Select Growth Rates (Choose up to 3):</label>
-            <select id="growthRates" name="growthRates" multiple required>
-                <option value="5">5%</option>
-                <option value="6">6%</option>
-                <option value="7">7%</option>
-                <option value="8">8%</option>
-                <option value="9">9%</option>
-            </select>
+        <div>
+          <label for="rothIra">Roth IRA Balance:</label>
+          <input type="number" id="rothIra" name="rothIra" />
         </div>
-        <div class="form-group0"></div>    
-            <label for="contributionIncrease">Contribution Increase Rate (%):</label>
-            <input type="number" id="contributionIncrease" name="contributionIncrease" placeholder="e.g., 5" required>
+        <div>
+          <label for="401k">401k Balance:</label>
+          <input type="number" id="account401k" name="account401k" />
         </div>
-        
-        <!-- Line 3: Current Age, Age Range, and Increment -->
-        <div class="form-group3">
-            
-            <div>
-                
-                <label for="currentAge">Current Age:</label>
-                <input type="number" id="currentAge" name="currentAge" required>
-            </div>
-            <div>
-                <label for="ageRange">Age Range (e.g., 30-65):</label>
-                <input type="text" id="ageRange" name="ageRange" placeholder="e.g., 30-65" required>
-            </div>
-            <div>
-                <label for="ageIncrement">Increment for Displaying Ages (e.g., 5):</label>
-                <input type="number" id="ageIncrement" name="ageIncrement" required>
-            </div>
+      </div>
+      <!-- Line 2: Yearly Contributions -->
+      <div class="form-group">
+        <div>
+          <label for="brokerageContribution"
+            >Annual Brokerage Contribution:</label
+          >
+          <input
+            type="number"
+            id="brokerageContribution"
+            name="brokerageContribution"
+          />
         </div>
-        
-        <button type="submit">Calculate</button>
+        <div>
+          <label for="rothIraContribution">Annual Roth IRA Contribution:</label>
+          <input
+            type="number"
+            id="rothIraContribution"
+            name="rothIraContribution"
+          />
+        </div>
+        <div>
+          <label for="account401kContribution">Annual 401k Contribution:</label>
+          <input
+            type="number"
+            id="account401kContribution"
+            name="account401kContribution"
+          />
+        </div>
+      </div>
+
+      <!-- Line 2: Select Growth Rates -->
+      <div class="form-group2">
+        <label for="growthRates">Select Growth Rates (Choose up to 3):</label>
+        <div class="growth-rate-options">
+          <label
+            ><input type="checkbox" name="growthRates" value="5" /> 5%</label
+          >
+          <label
+            ><input type="checkbox" name="growthRates" value="6" /> 6%</label
+          >
+          <label
+            ><input type="checkbox" name="growthRates" value="7" /> 7%</label
+          >
+          <label
+            ><input type="checkbox" name="growthRates" value="8" /> 8%</label
+          >
+          <label
+            ><input type="checkbox" name="growthRates" value="9" /> 9%</label
+          >
+        </div>
+      </div>
+
+      <!-- Annual Contribution Increase Rate -->
+      <div class="form-group0">
+        <label for="contributionIncrease"
+          >Annual Contribution Increase Rate (%):</label
+        >
+        <input
+          type="number"
+          id="contributionIncrease"
+          name="contributionIncrease"
+          placeholder="e.g., 5"
+        />
+      </div>
+
+      <!-- Line 3: Current Age, Age Range, and Increment -->
+      <div class="form-group3">
+        <div>
+          <label for="currentAge">Current Age:</label>
+          <input type="number" id="currentAge" name="currentAge" required />
+        </div>
+        <div>
+          <label for="ageRange">Age Range (e.g., 30-65):</label>
+          <input
+            type="text"
+            id="ageRange"
+            name="ageRange"
+            placeholder="e.g., 30-65"
+            required
+          />
+        </div>
+        <div>
+          <label for="ageIncrement"
+            >Increment for Displaying Ages (e.g., 5):</label
+          >
+          <input type="number" id="ageIncrement" name="ageIncrement" required />
+        </div>
+      </div>
+
+      <button type="submit">Calculate</button>
     </form>
-        
+
     <div id="results"></div>
-    <button id="downloadButton" style="display:none;">Download Results</button>
+    <button id="downloadButton" style="display: none">Download Results</button>
     <div id="formulaExplanation"></div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
