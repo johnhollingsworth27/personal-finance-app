@@ -16,6 +16,7 @@ document.getElementById('financeForm').addEventListener('submit', function (even
     const currentAge = parseInt(document.getElementById('currentAge').value);
     const [startAge, endAge] = document.getElementById('ageRange').value.split('-').map(Number);
     const ageIncrement = parseInt(document.getElementById('ageIncrement').value);
+    const years = endAge - currentAge;
 
     // Validate the number of selected growth rates
     if (growthRates.length > 3) {
@@ -23,147 +24,76 @@ document.getElementById('financeForm').addEventListener('submit', function (even
         return;
     }
 
-    // Function to format numbers as currency (e.g., "1,234,567")
-    function formatCurrency(value) {
-        return Math.round(value).toLocaleString();
-    }
-
-    // Function to calculate future value with increasing contributions
-    function futureValue(P, PMT, r, g, n) {
-        let FV_initial = P * Math.pow((1 + r), n);  // Future value of the initial investment
-        let FV_contrib = 0;
-        for (let i = 1; i <= n; i++) {
-            FV_contrib += PMT * Math.pow((1 + r), (n - i));
-            PMT = PMT * (1 + g);  // Increase contributions by the specified rate each year
-        }
-        return FV_initial + FV_contrib;
-    }
-
-    // Prepare results table
-    let results = '<table border="1"><tr><th>Age</th>';
-    growthRates.forEach(rate => {
-        if (brokerage > 0 || brokerageContribution > 0) {
-            results += `<th>Brokerage Account (${(rate * 100).toFixed(0)}%)</th>`;
-        }
-        if (rothIra > 0 || rothIraContribution > 0) {
-            results += `<th>Roth IRA (${(rate * 100).toFixed(0)}%)</th>`;
-        }
-        if (account401k > 0 || account401kContribution > 0) {
-            results += `<th>401k (${(rate * 100).toFixed(0)}%)</th>`;
-        }
-        results += `<th>Total (${(rate * 100).toFixed(0)}%)</th>`;
-    });
-    results += '</tr>';
-
-    // Variable to store user-specific formula details
-    let formulaDetails = '';
-
-    let formulaGroupedByRate = {};  // Grouping formulas by rate
-
-    // Function to format numbers as currency with no decimal places
+    // Function to format numbers as currency
     function formatCurrency(value) {
         return Math.round(value).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 });
     }
 
+    // Function to calculate future value with increasing contributions
+    function futureValue(P, PMT, r, g, n) {
+        let FV_initial = P * Math.pow((1 + r), n);
+        let FV_contrib = 0;
+        for (let i = 1; i <= n; i++) {
+            FV_contrib += PMT * Math.pow((1 + r), (n - i));
+            PMT = PMT * (1 + g);
+        }
+        return FV_initial + FV_contrib;
+    }
+
+   // Define colors for each growth rate section and total columns
+    const colors = ['#E6F7FF', '#FFEFCD', '#F7E6FF'];
+    const totalColors = ['#FFDF9A', '#FFDF9A', '#FFDF9A'];
+
+    // Prepare results table with colored headers and sections
+    let results = '<table><thead><tr><th>Age</th>';
+    growthRates.forEach((rate, index) => {
+        // Use the color for each growth rate's title cell (header) and data columns
+        const color = colors[index % colors.length];
+        results += `<th colspan="4" style="border: 2px solid #333; background-color: ${color}; font-weight: bold;">${(rate * 100).toFixed(0)}% Growth Rate</th>`;
+    });
+    results += '</tr><tr><th></th>';
+
+    // Add sub-headers for account types under each growth rate with the same color as the growth rate section
+    growthRates.forEach((_, index) => {
+        const color = colors[index % colors.length];
+        results += `
+            <th style="background-color: ${color}; border: 1px solid #333;">Brokerage Account</th>
+            <th style="background-color: ${color}; border: 1px solid #333;">Roth IRA</th>
+            <th style="background-color: ${color}; border: 1px solid #333;">401k</th>
+            <th style="background-color: ${totalColors[index % totalColors.length]}; border: 1px solid #333; font-weight: bold;">Total</th>
+        `;
+    });
+    results += '</tr></thead><tbody>';
+
     // Calculate future values for each age
     for (let age = startAge; age <= endAge; age += ageIncrement) {
-        results += `<tr><td>${age}</td>`;
-        growthRates.forEach(rate => {
+        results += `<tr><td style="border: 1px solid #333;">${age}</td>`;
+        growthRates.forEach((rate, index) => {
             const years = age - currentAge;
-            let brokerageFV = 0, rothIraFV = 0, account401kFV = 0, totalFV = 0;
+            let brokerageFV = futureValue(brokerage, brokerageContribution, rate, contributionIncrease, years);
+            let rothIraFV = futureValue(rothIra, rothIraContribution, rate, contributionIncrease, years);
+            let account401kFV = futureValue(account401k, account401kContribution, rate, contributionIncrease, years);
+            let totalFV = brokerageFV + rothIraFV + account401kFV;
 
-            // Initialize grouping if not yet done
-            if (!formulaGroupedByRate[rate]) {
-                formulaGroupedByRate[rate] = '';
-            }
+            // Use the same color for each growth rate's columns
+            const color = colors[index % colors.length];
+            const totalColor = totalColors[index % totalColors.length];
 
-            if (brokerage > 0 || brokerageContribution > 0) {
-                brokerageFV = futureValue(brokerage, brokerageContribution, rate, contributionIncrease, years);
-                results += `<td>${formatCurrency(brokerageFV)}</td>`;
-                totalFV += brokerageFV;
-                formulaGroupedByRate[rate] += `
-            <div>
-                <strong>Age ${age} ~ ${formatCurrency(brokerageFV)} = </strong>
-                ${formatCurrency(brokerage)} * (1 + ${rate})^${years} + ${formatCurrency(brokerageContribution)} * ((1 + ${rate})^${years} - 1) / ${rate}
-            </div>`;
-            }
-
-            if (rothIra > 0 || rothIraContribution > 0) {
-                rothIraFV = futureValue(rothIra, rothIraContribution, rate, contributionIncrease, years);
-                results += `<td>${formatCurrency(rothIraFV)}</td>`;
-                totalFV += rothIraFV;
-                formulaGroupedByRate[rate] += `
-            <div>
-                <strong>Age ${age} ~ ${formatCurrency(rothIraFV)} = </strong>
-                ${formatCurrency(rothIra)} * (1 + ${rate})^${years} + ${formatCurrency(rothIraContribution)} * ((1 + ${rate})^${years} - 1) / ${rate}
-            </div>`;
-            }
-
-            if (account401k > 0 || account401kContribution > 0) {
-                account401kFV = futureValue(account401k, account401kContribution, rate, contributionIncrease, years);
-                results += `<td>${formatCurrency(account401kFV)}</td>`;
-                totalFV += account401kFV;
-                formulaGroupedByRate[rate] += `
-            <div>
-                <strong>Age ${age} ~ ${formatCurrency(account401kFV)} = </strong> 
-                ${formatCurrency(account401k)} * (1 + ${rate})^${years} + ${formatCurrency(account401kContribution)} * ((1 + ${rate})^${years} - 1) / ${rate}
-            </div>`;
-            }
-
-            results += `<td>${formatCurrency(totalFV)}</td>`;
+            results += `<td style="background-color: ${color}; border: 1px solid #333;">${formatCurrency(brokerageFV)}</td>`;
+            results += `<td style="background-color: ${color}; border: 1px solid #333;">${formatCurrency(rothIraFV)}</td>`;
+            results += `<td style="background-color: ${color}; border: 1px solid #333;">${formatCurrency(account401kFV)}</td>`;
+            results += `<td style="background-color: ${totalColor}; border: 1px solid #333; font-weight: bold;">${formatCurrency(totalFV)}</td>`;
         });
         results += '</tr>';
     }
 
-    results += '</table>';
+    results += '</tbody></table>';
     document.getElementById('results').innerHTML = results;
 
-    // Constructing the formulaDetails by rate
-    for (let rate in formulaGroupedByRate) {
-        formulaDetails += `
-    <div style="padding: 6px; text-align: center; background-color: #333; color: white; border: none; margin-bottom: 10px; margin-top: 20px;">
-        <h2>Market Growth Rate: ${(rate * 100).toFixed(0)}%</h2> 
-    </div>
-    
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-        <div style="padding: 6px; text-align: center; background-color: #707070; color: white; border: none; margin-bottom: 10px;"><strong>Brokerage Account</strong></div>
-        <div style="padding: 6px; text-align: center; background-color: #707070; color: white; border: none; margin-bottom: 10px;"><strong>Roth IRA</strong></div>
-        <div style="padding: 6px; text-align: center; background-color: #707070; color: white; border: none; margin-bottom: 10px;"><strong>401k</strong></div>
-    </div>
-    
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-        ${formulaGroupedByRate[rate]}
-    </div>
-    <hr>
-`;
-    }
-    // Display the formula explanation and the user's input-based formula
-    let formulaExplanation = `
-    <h2>How did we do it?</h2>
-    <h3>Formula Used for Calculations</h3>
-    <p>The future value of the initial contribution plus the increasing contributions can be written as:</p>
-    <p><img src="FV-formula.png" alt="Formula for Future Value with Increasing Contributions" style="max-width: 100%; height: auto;"></p>
 
-    <p>Where:</p>
-    <ul>
-        <li><strong>FV:</strong> Final value of account balance </li>
-        <li><strong>P:</strong> Principal investment </li>
-        <li><strong>r:</strong> Annual growth rate (e.g., 5%, 6%, 7%, etc.)</li>
-        <li><strong>n:</strong> Number of years (calculated as the difference between target age and current age)</li>
-        <li><strong>PMT<sub>0</sub>:</strong> Initial yearly contribution</li>
-        <li><strong>g:</strong> Annual increase rate of contributions (e.g., 5%)</li>
-        <li><strong>t:</strong> Each individual year from 1 to n</li>
-    </ul>
-    <h3>User Input Values in the Formula</h3>
-    ${formulaDetails}
-`;
-
-
-    document.getElementById('formulaExplanation').innerHTML = formulaExplanation;
-
+    // Display the download button
     document.getElementById('downloadButton').style.display = 'block';
 
-    // Implement download functionality (optional: can generate a CSV file for download)
     document.getElementById('downloadButton').addEventListener('click', function () {
         const blob = new Blob([results], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
@@ -175,4 +105,73 @@ document.getElementById('financeForm').addEventListener('submit', function (even
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     });
+
+    // Calculate example future values for the first growth rate using Brokerage and Roth IRA
+    const exampleRate = growthRates[0];
+    const exampleFutureValueBrokerage = futureValue(brokerage, brokerageContribution, exampleRate, contributionIncrease, years);
+    const exampleFutureValueRothIra = futureValue(rothIra, rothIraContribution, exampleRate, contributionIncrease, years);
+
+    // Generate the formula explanation content with both examples
+    const formulaExplanationContent = `
+        <div style="margin-top: 20px; padding: 20px; background-color: #f7f7f7; border-radius: 8px;">
+            <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 16px;">Formula Explanation</h2>
+            <div>
+                <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
+                    \\[
+                    FV = P \\times (1 + r)^n + \\sum_{t=1}^{n} PMT_0 \\times (1 + g)^{t-1} \\times (1 + r)^{n - t}
+                    \\]
+                </p>
+            </div>
+            
+            <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">Variable Definitions:</h3>
+            <ul style="list-style-type: disc; padding-left: 20px;">
+                <li><strong>FV:</strong> Final value of account balance</li>
+                <li><strong>P:</strong> Principal investment</li>
+                <li><strong>r:</strong> Annual growth rate</li>
+                <li><strong>n:</strong> Number of years</li>
+                <li><strong>PMT₀:</strong> Initial yearly contribution</li>
+                <li><strong>g:</strong> Annual increase rate of contributions</li>
+                <li><strong>t:</strong> Each individual year from 1 to n</li>
+            </ul>
+
+            <h3 style="font-size: 20px; font-weight: bold; margin-top: 24px;">Example Calculation - Brokerage Account</h3>
+            <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
+                For an initial investment of \\( P = ${brokerage} \\), an annual contribution of \\( PMT_0 = ${brokerageContribution} \\),
+                a growth rate of \\( r = ${exampleRate} \\), an annual contribution increase rate of \\( g = ${contributionIncrease} \\),
+                and a time span of \\( n = ${years} \\) years:
+            </p>
+            <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
+                \\[
+                FV = ${brokerage} \\times (1 + ${exampleRate})^{${years}} + \\sum_{t=1}^{${years}} ${brokerageContribution} \\times (1 + ${contributionIncrease})^{t-1} \\times (1 + ${exampleRate})^{${years} - t}
+                \\]
+            </p>
+            <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
+                After ${years} years your final value <strong>(FV) = ${formatCurrency(exampleFutureValueBrokerage)}</strong>
+            </p>
+
+            <h3 style="font-size: 20px; font-weight: bold; margin-top: 24px;">Example Calculation - Roth IRA</h3>
+            <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
+                For an initial investment of \\( P = ${rothIra} \\), an annual contribution of \\( PMT_0 = ${rothIraContribution} \\),
+                a growth rate of \\( r = ${exampleRate} \\), an annual contribution increase rate of \\( g = ${contributionIncrease} \\),
+                and a time span of \\( n = ${years} \\) years:
+            </p>
+            <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
+                \\[
+                FV = ${rothIra} \\times (1 + ${exampleRate})^{${years}} + \\sum_{t=1}^{${years}} ${rothIraContribution} \\times (1 + ${contributionIncrease})^{t-1} \\times (1 + ${exampleRate})^{${years} - t}
+                \\]
+            </p>
+            <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
+                After ${years} years your final value <strong>(FV) = ${formatCurrency(exampleFutureValueRothIra)}</strong>
+            </p>
+        </div>
+`;
+
+    // Insert the formula explanation content into the HTML
+    document.getElementById('formulaExplanation').innerHTML = formulaExplanationContent;
+
+    // Trigger MathJax to typeset the new content
+    if (window.MathJax) {
+        MathJax.typesetPromise();
+}
+
 });
