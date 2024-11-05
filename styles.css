@@ -22,10 +22,7 @@ form {
 
 .growth-rate-options {
   display: grid;
-  grid-template-columns: repeat(
-    5,
-    1fr
-  ); /* Adjust the number to fit your needs */
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   align-items: center;
   margin-bottom: 20px;
@@ -35,17 +32,17 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px; /* Add padding to increase the clickable area */
-  border: 1px solid #ccc; /* Optional: Add a border */
-  border-radius: 5px; /* Optional: Add border-radius for rounded corners */
-  background-color: #f9f9f9; /* Optional: Add background color */
-  width: 100%; /* Make the label take up the full width of the grid column */
-  cursor: pointer; /* Change cursor to pointer for better UX */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  width: 100%;
+  cursor: pointer;
 }
 
 .growth-rate-options input[type="checkbox"] {
-  margin-right: 10px; /* Add space between checkbox and label text */
-  transform: scale(1.5); /* Increase the size of the checkbox */
+  margin-right: 10px;
+  transform: scale(1.5);
 }
 
 .form-group0 {
@@ -98,5 +95,50 @@ th,
 td {
   padding: 10px;
   text-align: center;
-  border: 1px solid #ddd;
+  border: 1px solid #333;
+}
+
+thead th[colspan="4"] {
+  background-color: #f0f8ff;
+  font-weight: bold;
+  border: 2px solid #333;
+}
+
+#formulaExplanation {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+}
+
+#formulaExplanation h2,
+#formulaExplanation h3 {
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+#formulaExplanation h2 {
+  font-size: 24px;
+}
+
+#formulaExplanation h3 {
+  font-size: 20px;
+  margin-top: 24px;
+}
+
+#formulaExplanation p {
+  margin: 0;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+#formulaExplanation ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+#formulaExplanation li {
+  margin-bottom: 8px;
 }
