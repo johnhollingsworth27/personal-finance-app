@@ -1,137 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Personal Finance Calculator</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script
-      id="MathJax-script"
-      async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-    ></script>
-  </head>
-  <body>
-    <h1>
-      financial-future.com
-    </h1>
-    <h2>
-      Input your current values in the fields below to calculate your future
-      holdings
-    </h2>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>future-finances</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container">
+    <br>
+    <h3>Input your current values</h3>
 
     <form id="financeForm">
       <!-- Line 1: Brokerage, Roth IRA, and 401k -->
       <div class="form-group">
         <div>
           <label for="brokerage">Brokerage Account Balance:</label>
-          <input type="number" id="brokerage" name="brokerage" />
+          <input type="number" id="brokerage" name="brokerage" class="form-control" />
         </div>
         <div>
           <label for="rothIra">Roth IRA Balance:</label>
-          <input type="number" id="rothIra" name="rothIra" />
+          <input type="number" id="rothIra" name="rothIra" class="form-control" />
         </div>
         <div>
           <label for="401k">401k Balance:</label>
-          <input type="number" id="account401k" name="account401k" />
+          <input type="number" id="account401k" name="account401k" class="form-control" />
         </div>
       </div>
+
       <!-- Line 2: Yearly Contributions -->
       <div class="form-group">
         <div>
-          <label for="brokerageContribution"
-            >Annual Brokerage Contribution:</label
-          >
-          <input
-            type="number"
-            id="brokerageContribution"
-            name="brokerageContribution"
-          />
+          <label for="brokerageContribution">Annual Brokerage Contribution:</label>
+          <input type="number" id="brokerageContribution" name="brokerageContribution" class="form-control" />
         </div>
         <div>
           <label for="rothIraContribution">Annual Roth IRA Contribution:</label>
-          <input
-            type="number"
-            id="rothIraContribution"
-            name="rothIraContribution"
-          />
+          <input type="number" id="rothIraContribution" name="rothIraContribution" class="form-control" />
         </div>
         <div>
           <label for="account401kContribution">Annual 401k Contribution:</label>
-          <input
-            type="number"
-            id="account401kContribution"
-            name="account401kContribution"
-          />
+          <input type="number" id="account401kContribution" name="account401kContribution" class="form-control" />
         </div>
       </div>
 
-      <!-- Line 2: Select Growth Rates -->
+      <!-- Line 3: Select Growth Rates -->
       <div class="form-group2">
         <label for="growthRates">Select Growth Rates (Choose up to 3):</label>
         <div class="growth-rate-options">
-          <label
-            ><input type="checkbox" name="growthRates" value="5" /> 5%</label
-          >
-          <label
-            ><input type="checkbox" name="growthRates" value="6" /> 6%</label
-          >
-          <label
-            ><input type="checkbox" name="growthRates" value="7" /> 7%</label
-          >
-          <label
-            ><input type="checkbox" name="growthRates" value="8" /> 8%</label
-          >
-          <label
-            ><input type="checkbox" name="growthRates" value="9" /> 9%</label
-          >
+          <label class="form-check-label"><input type="checkbox" name="growthRates" value="5"
+              class="form-check-input" /> 5%</label>
+          <label class="form-check-label"><input type="checkbox" name="growthRates" value="6"
+              class="form-check-input" /> 6%</label>
+          <label class="form-check-label"><input type="checkbox" name="growthRates" value="7"
+              class="form-check-input" /> 7%</label>
+          <label class="form-check-label"><input type="checkbox" name="growthRates" value="8"
+              class="form-check-input" /> 8%</label>
+          <label class="form-check-label"><input type="checkbox" name="growthRates" value="9"
+              class="form-check-input" /> 9%</label>
         </div>
       </div>
 
-      <!-- Annual Contribution Increase Rate -->
-      <div class="form-group0">
-        <label for="contributionIncrease"
-          >Annual Contribution Increase Rate (%):</label
-        >
-        <input
-          type="number"
-          id="contributionIncrease"
-          name="contributionIncrease"
-          placeholder="e.g., 5"
-        />
-      </div>
-
-      <!-- Line 3: Current Age, Age Range, and Increment -->
+      <!-- Line 4: Current Age, Age Range, and Increment -->
       <div class="form-group3">
+        <!-- Annual Contribution Increase Rate -->
+        <div>
+          <label for="contributionIncrease">Annual Contribution Increase Rate (%):</label>
+          <input type="number" id="contributionIncrease" name="contributionIncrease" placeholder="e.g., 2" class="form-control" />
+        </div>
         <div>
           <label for="currentAge">Current Age:</label>
-          <input type="number" id="currentAge" name="currentAge" required />
+          <input type="number" id="currentAge" name="currentAge" required class="form-control" />
         </div>
         <div>
           <label for="ageRange">Age Range (e.g., 30-65):</label>
-          <input
-            type="text"
-            id="ageRange"
-            name="ageRange"
-            placeholder="e.g., 30-65"
-            required
-          />
+          <input type="text" id="ageRange" name="ageRange" placeholder="e.g., 30-65" required class="form-control" />
         </div>
         <div>
-          <label for="ageIncrement"
-            >Increment for Displaying Ages (e.g., 5):</label
-          >
-          <input type="number" id="ageIncrement" name="ageIncrement" required />
+          <label for="ageIncrement">Increment for Displaying Ages (e.g., 5):</label>
+          <input type="number" id="ageIncrement" name="ageIncrement" required class="form-control" />
         </div>
       </div>
-
-      <button type="submit">Calculate</button>
+      <button id="calcButton" type="submit" class="btn btn-primary">Calculate</button>
     </form>
 
-    <div id="results"></div>
-    <button id="downloadButton" style="display: none">Download Results</button>
-    <div id="formulaExplanation"></div>
+    <!-- Results Container for Horizontal Scrolling -->
+    <div id="resultsContainer">
+      <div id="results"></div>
+    </div>
 
-    <script src="script.js"></script>
-  </body>
+    <button id="downloadButton" style="display: none" class="btn btn-secondary mt-3">Download Results</button>
+
+    <!-- Formula Explanation Container for Horizontal Scrolling -->
+    <div id="formulaExplanationContainer">
+      <div id="formulaExplanation">
+        <div class="example-calculation">
+          <h3>Example Calculation - Brokerage Account</h3>
+          <div class="scrollable-example-container">
+            <div class="formula-box">
+              <p>For an initial investment of P, annual contribution of PMT<sub>0</sub>, a growth rate of
+                r, annual contribution increase rate of g, and a time span of n ...</p>
+              <!-- Add MathJax formulas or content here -->
+              <p>After n years your final value (FV) = Input to find out!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
 </html>

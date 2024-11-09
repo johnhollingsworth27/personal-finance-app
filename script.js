@@ -40,16 +40,16 @@ document.getElementById('financeForm').addEventListener('submit', function (even
         return FV_initial + FV_contrib;
     }
 
-   // Define colors for each growth rate section and total columns
-    const colors = ['#E6F7FF', '#FFEFCD', '#F7E6FF'];
-    const totalColors = ['#FFDF9A', '#FFDF9A', '#FFDF9A'];
+    // Define colors for each growth rate section and total columns
+    const colors = ['#eee2c2', '#ead297', '#d1ba96'];
+    const totalColors = '#fcf9f3';
 
     // Prepare results table with colored headers and sections
     let results = '<table><thead><tr><th>Age</th>';
     growthRates.forEach((rate, index) => {
         // Use the color for each growth rate's title cell (header) and data columns
         const color = colors[index % colors.length];
-        results += `<th colspan="4" style="border: 2px solid #333; background-color: ${color}; font-weight: bold;">${(rate * 100).toFixed(0)}% Growth Rate</th>`;
+        results += `<th colspan="4" style="border: 2px solid #333; background-color: ${color}; font-weight: bold; text-align: center;">${(rate * 100).toFixed(0)}% Growth Rate</th>`;
     });
     results += '</tr><tr><th></th>';
 
@@ -57,11 +57,12 @@ document.getElementById('financeForm').addEventListener('submit', function (even
     growthRates.forEach((_, index) => {
         const color = colors[index % colors.length];
         results += `
-            <th style="background-color: ${color}; border: 1px solid #333;">Brokerage Account</th>
-            <th style="background-color: ${color}; border: 1px solid #333;">Roth IRA</th>
-            <th style="background-color: ${color}; border: 1px solid #333;">401k</th>
-            <th style="background-color: ${totalColors[index % totalColors.length]}; border: 1px solid #333; font-weight: bold;">Total</th>
+            <th style="background-color: ${color}; border: 1px solid #333; text-align: center;">Brokerage Account</th>
+            <th style="background-color: ${color}; border: 1px solid #333; text-align: center;">Roth IRA</th>
+            <th style="background-color: ${color}; border: 1px solid #333; text-align: center;">401k</th>
+            <th style="background-color: ${totalColors}; border: 1px solid #333; font-weight: bold; text-align: center;">Total</th>
         `;
+
     });
     results += '</tr></thead><tbody>';
 
@@ -77,12 +78,12 @@ document.getElementById('financeForm').addEventListener('submit', function (even
 
             // Use the same color for each growth rate's columns
             const color = colors[index % colors.length];
-            const totalColor = totalColors[index % totalColors.length];
+            //const totalColor = totalColors[index % totalColors.length];
 
             results += `<td style="background-color: ${color}; border: 1px solid #333;">${formatCurrency(brokerageFV)}</td>`;
             results += `<td style="background-color: ${color}; border: 1px solid #333;">${formatCurrency(rothIraFV)}</td>`;
             results += `<td style="background-color: ${color}; border: 1px solid #333;">${formatCurrency(account401kFV)}</td>`;
-            results += `<td style="background-color: ${totalColor}; border: 1px solid #333; font-weight: bold;">${formatCurrency(totalFV)}</td>`;
+            results += `<td style="background-color: ${totalColors}; border: 1px solid #333; font-weight: bold;">${formatCurrency(totalFV)}</td>`;
         });
         results += '</tr>';
     }
@@ -136,8 +137,8 @@ document.getElementById('financeForm').addEventListener('submit', function (even
 
             <h3 style="font-size: 20px; font-weight: bold; margin-top: 24px;">Example Calculation - Brokerage Account</h3>
             <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
-                For an initial investment of \\( P = ${brokerage} \\), an annual contribution of \\( PMT_0 = ${brokerageContribution} \\),
-                a growth rate of \\( r = ${exampleRate} \\), an annual contribution increase rate of \\( g = ${contributionIncrease} \\),
+                For an initial investment of \\( P = ${brokerage} \\), annual contribution of \\( PMT_0 = ${brokerageContribution} \\),
+                growth rate of \\( r = ${exampleRate} \\), annual contribution increase rate of \\( g = ${contributionIncrease} \\),
                 and a time span of \\( n = ${years} \\) years:
             </p>
             <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
@@ -151,8 +152,8 @@ document.getElementById('financeForm').addEventListener('submit', function (even
 
             <h3 style="font-size: 20px; font-weight: bold; margin-top: 24px;">Example Calculation - Roth IRA</h3>
             <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
-                For an initial investment of \\( P = ${rothIra} \\), an annual contribution of \\( PMT_0 = ${rothIraContribution} \\),
-                a growth rate of \\( r = ${exampleRate} \\), an annual contribution increase rate of \\( g = ${contributionIncrease} \\),
+                For an initial investment of \\( P = ${rothIra} \\), annual contribution of \\( PMT_0 = ${rothIraContribution} \\),
+                growth rate of \\( r = ${exampleRate} \\), annual contribution increase rate of \\( g = ${contributionIncrease} \\),
                 and a time span of \\( n = ${years} \\) years:
             </p>
             <p style="padding: 16px; background-color: #ffffff; border-radius: 4px;">
@@ -172,6 +173,6 @@ document.getElementById('financeForm').addEventListener('submit', function (even
     // Trigger MathJax to typeset the new content
     if (window.MathJax) {
         MathJax.typesetPromise();
-}
+    }
 
 });
