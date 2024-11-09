@@ -3,7 +3,7 @@ body {
   margin: 40px;
 }
 
-h1 {
+h1, h2, h3 {
   color: #333;
 }
 
@@ -25,24 +25,33 @@ form {
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   align-items: center;
+  justify-content: center; /* Centers content horizontally */
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .growth-rate-options label {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
+  align-items: center; /* Centers content vertically */
+  justify-content: center; /* Centers content horizontally */
+  padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
   width: 100%;
   cursor: pointer;
+  box-sizing: border-box;
+  font-size: 12px;
+  text-align: center; /* Ensures text is centered inside the label */
 }
 
 .growth-rate-options input[type="checkbox"] {
-  margin-right: 10px;
-  transform: scale(1.5);
+  margin-right: 8px;
+  transform: scale(1.2); /* Reduce scale for smaller checkbox */
+}
+
+table th, table td {
+  text-align: center;
 }
 
 .form-group0 {
@@ -71,9 +80,19 @@ form {
   grid-column: span 1;
 }
 
+#calcButton {
+  background-color: #339999;
+  color: white; /* Adjust text color for better contrast, if needed */
+}
+
+#downloadButton {
+  background-color: #9e3b4d;
+  color: white; /* Adjust text color for better contrast, if needed */
+}
+
 button {
   padding: 12px;
-  background-color: #007bff;
+  background-color: #9e3b4d;
   color: white;
   border: none;
   cursor: pointer;
@@ -141,4 +160,84 @@ thead th[colspan="4"] {
 
 #formulaExplanation li {
   margin-bottom: 8px;
+}
+
+
+/* General Styles for smaller screens (like mobile phones) */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .form-group,
+  .form-group2,
+  .form-group0,
+  .form-group3 {
+    display: flex;
+    flex-direction: column; /* Stack inputs vertically */
+    margin-bottom: 15px;
+  }
+
+  .form-group div,
+  .form-group2 div,
+  .form-group0 div,
+  .form-group3 div {
+    margin-bottom: 10px;
+  }
+
+  form {
+    padding: 15px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  /* Adjust label alignment */
+  label {
+    margin-bottom: 5px;
+  }
+}
+
+#resultsContainer {
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc; /* Optional, for visibility */
+  margin-top: 20px;
+}
+
+/* Scrollable container for example calculation content */
+.scrollable-example-container {
+  overflow-x: auto;
+  max-width: 100%;
+  white-space: nowrap;
+  padding: 10px;
+  margin: 0 auto;
+  border: 1px solid #ccc; /* Optional for visibility */
+  background-color: #f7f7f7; /* Matches surrounding content background */
+}
+
+/* Styling for the formula box */
+#formulaExplanation .formula-box {
+  display: inline-block;
+  padding: 15px;
+  margin: 15px auto;
+  background-color: #ffffff;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: auto; /* Ensures width adjusts with content */
+  white-space: normal;
+  box-sizing: border-box;
+}
+
+/* Optional: Adjust content within the formula box for spacing and alignment */
+#formulaExplanation p {
+  margin: 0;
+  padding: 10px;
+  font-family: monospace;
+  overflow-x: auto; /* Ensure formula text itself can scroll if needed */
 }
